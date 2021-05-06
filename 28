@@ -1,0 +1,51 @@
+ptimizing GCC 4.8.2 for x64
+
+f1:
+	mov	eax, DWORD PTR [rsi]
+	xor	edx, edx
+	cmp	DWORD PTR [rdi], eax
+	mov	eax, -1
+	setg	dl
+	cmovge	eax, edx
+	ret
+f_main:
+	push	r12
+	mov	r12, rdi
+	push	rbp
+	lea	rbp, [0+rsi*4]
+	push	rbx
+	mov	rdi, rbp
+	mov	rbx, rsi
+	call	malloc
+	mov	rdx, rbp
+	mov	rsi, r12
+	mov	rdi, rax
+	call	memcpy
+	mov	ecx, OFFSET FLAT:f1
+	mov	edx, 4
+	mov	rsi, rbx
+	mov	rdi, rax
+	mov	rbp, rax
+	call	qsort
+	test	bl, 1
+	jne	.L12
+	shr	rbx
+	mov	eax, DWORD PTR [rbp+0+rbx*4]
+	add	eax, DWORD PTR [rbp-4+rbx*4]
+	pop	rbx
+	pop	rbp
+	pop	r12
+	mov	edx, eax
+	shr	edx, 31
+	add	eax, edx
+	sar	eax
+	ret
+.L12:
+	shr	rbx
+	mov	eax, DWORD PTR [rbp+0+rbx*4]
+	pop	rbx
+	pop	rbp
+	pop	r12
+	ret
+	
+Function returns a median of an array
