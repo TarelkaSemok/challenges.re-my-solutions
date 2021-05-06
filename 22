@@ -1,0 +1,78 @@
+f2:                                 ; edx: var1, rdi: var2, esi: var3
+        movsx   rax, esi					
+        push    rbp
+        xor     r8d, r8d            ; r8: i;
+        lea     rcx, [rdi+rax*4]    ; rcx: pnt1 = var2 + var3;
+        lea     eax, [rdx+1]        ; eax: res = var1 + 1
+        push    rbx
+        mov     ebp, DWORD PTR [rcx]  ; ebp: ivar2 = pnt1[0];
+.L2:
+        mov     ebx, DWORD PTR [rcx+4+r8] ; ebx: ivar3 = pnt1[4+i]
+        inc     esi                       ; var3++
+        cmp     ebx, ebp                  ; if ((ivar3 > ivar2) || (var3 > var1)) 
+        jg      .L3                       ; {goto L3;}
+        cmp     esi, edx
+        jg      .L3
+.L4:
+        add     r8, 4                     ; else {i = i + 4;
+        jmp     .L2                       ; goto L2;}
+.L3:
+        movsx   r9, eax                   ; r9: pnt2 = res
+        lea     r10, [rdi-4+r9*4]         ; r10: pnt3 = var2[res-1]
+.L6:                                      ; do {
+        mov     r9, r10                   ; pnt2 = pnt3
+        sub     r10, 4                    ; pnt3 = pnt3 - 4
+        mov     r11d, DWORD PTR [r10+4]   ; r11: ivar4 = pnt3[0]
+        dec     eax                       ; res = res - 1
+        cmp     r11d, ebp                 ; } while (ivar4 > ivar2)
+        jg      .L6
+        cmp     esi, eax                  ; if(var3 >= res) {
+        jge     .L7                       ; goto L7}
+        xor     r11d, ebx                 ; else { ivar4 = ivar4 ^ ivar3;
+        mov     DWORD PTR [rcx+4+r8], r11d; pnt1[1+i] = ivar4;
+        xor     r11d, DWORD PTR [r9]      ; ivar4 = ivar4 ^ pnt2[0]
+        mov     DWORD PTR [r9], r11d      ; pnt2[0] = ivar4
+        xor     DWORD PTR [rcx+4+r8], r11d; pnt1[1+i] = pnt1[1+i] ^ ivar4
+        jmp     .L4                       ; goto L4}
+.L7:
+        xor     r11d, DWORD PTR [rcx]     ; ivar4 = ivar4 ^ pnt1[0]
+        mov     DWORD PTR [rcx], r11d     ; pnt1[0] = ivar4
+        xor     r11d, DWORD PTR [r9]      ; ivar4 = ivar4 ^ pnt2[0]
+        mov     DWORD PTR [r9], r11d      ; pnt2[0] = ivar4;
+        xor     DWORD PTR [rcx], r11d     ; pnt1[0] = pnt1[0] ^ ivar4;
+        pop     rbx                       ; return
+        pop     rbp
+        ret
+
+f1:
+        push    r13
+        push    r12
+        mov     r12d, edx                 ; r12 = edx = var1
+        push    rbp
+        mov     rbp, rdi                  ; rbp = rdi = var2
+        push    rbx                       ; esi = var3
+        mov     ebx, esi                  ; ebx = i; i = var3
+        push    rcx                       ; ???
+.L12:
+        cmp     ebx, r12d                 ; while(i<var1) {
+        jge     .L10 
+        mov     esi, ebx
+        mov     edx, r12d
+        mov     rdi, rbp
+        call    f2                        ; f2_out = f2(var2, var1, var3) - 1;
+        lea     edx, [rax-1]              ; var1 = f2_out - 1;
+        mov     r13d, eax			
+        mov     esi, ebx                  ; var3 = i;
+        mov     rdi, rbp
+        lea     ebx, [r13+1]              ; i = f2_out + 1;
+        call    f1                        ; f1(var1, var2, var3);
+        jmp     .L12                      ; }
+.L10:
+        pop     rax                       ; return rcx;
+        pop     rbx
+        pop     rbp
+        pop     r12
+        pop     r13
+        ret
+		
+quicksort() with one pivot and LR pointers
