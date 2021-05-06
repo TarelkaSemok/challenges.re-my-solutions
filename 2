@@ -1,0 +1,23 @@
+<f>:
+   0:          mov    eax,DWORD PTR [esp+0x4]			
+   4:          bswap  eax                     // меняем местами байты
+   6:          mov    edx,eax							
+   8:          and    eax,0xf0f0f0f						// меняем местами группы по 4 бита
+   d:          and    edx,0xf0f0f0f0
+  13:          shr    edx,0x4
+  16:          shl    eax,0x4
+  19:          or     eax,edx							    // результат в eax
+  1b:          mov    edx,eax
+  1d:          and    eax,0x33333333					// меняем местами группы по 2 бита
+  22:          and    edx,0xcccccccc
+  28:          shr    edx,0x2
+  2b:          shl    eax,0x2
+  2e:          or     eax,edx						     	// результат в eax
+  30:          mov    edx,eax
+  32:          and    eax,0x55555555					// меняем местами группы по 1 биту
+  37:          and    edx,0xaaaaaaaa
+  3d:          add    eax,eax							    // по сути умножение на 2, а значит сдвиг влево
+  3f:          shr    edx,1								
+  41:          or     eax,edx							    // результат в eax
+  43:          ret										        // функция выполняет разворот DWORD задом наперед
+  
