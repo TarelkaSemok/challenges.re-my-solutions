@@ -1,0 +1,96 @@
+f3:
+	push	r15
+	mov	r15, rsi
+	push	r14
+	mov	r14, rdx
+	push	r13
+	mov	r13, rcx
+	push	r12
+	push	rbp
+	push	rbx
+	mov	rbx, rdi
+	sub	rsp, 24
+	mov	QWORD PTR [rsp], r8
+	mov	QWORD PTR [rsp+8], r9
+	call	strlen
+	cmp	rax, 36
+	mov	edx, -1
+	jne	.L28
+	mov	r12, rbx
+	xor	ebp, ebp
+	jmp	.L35
+.L43:
+	cmp	ebp, 13
+	je	.L29
+	cmp	ebp, 18
+	je	.L29
+	cmp	ebp, 23
+	je	.L29
+	cmp	ebp, 36
+	je	.L42
+.L33:
+	movsx	edi, BYTE PTR [r12]
+	call	isxdigit
+	test	eax, eax
+	je	.L37
+.L32:
+	add	ebp, 1
+	add	r12, 1
+	cmp	ebp, 37
+	je	.L34
+.L35:
+	cmp	ebp, 8
+	jne	.L43
+.L29:
+	cmp	BYTE PTR [r12], 45			// '-'
+	je	.L32
+.L37:
+	mov	edx, -1
+.L28:
+	add	rsp, 24
+	mov	eax, edx
+	pop	rbx
+	pop	rbp
+	pop	r12
+	pop	r13
+	pop	r14
+	pop	r15
+	ret
+.L42:
+	cmp	BYTE PTR [r12], 0
+	jne	.L33
+.L34:
+	mov	edx, 16
+	xor	esi, esi
+	mov	rdi, rbx
+	call	strtoul
+	lea	rdi, [rbx+9]
+	mov	edx, 16
+	xor	esi, esi
+	mov	DWORD PTR [r15], eax
+	call	strtoul
+	lea	rdi, [rbx+14]
+	mov	edx, 16
+	xor	esi, esi
+	mov	WORD PTR [r14], ax
+	call	strtoul
+	lea	rdi, [rbx+19]
+	mov	edx, 16
+	xor	esi, esi
+	mov	WORD PTR [r13+0], ax
+	call	strtoul
+	mov	rcx, QWORD PTR [rsp]
+	lea	rdi, [rbx+24]
+	mov	edx, 16
+	xor	esi, esi
+	mov	WORD PTR [rcx], ax
+	call	strtoull
+	mov	rcx, QWORD PTR [rsp+8]
+	xor	edx, edx
+	mov	QWORD PTR [rcx], rax
+	jmp	.L28
+	
+Input is 36-char string
+9,14,19,24 char is: '-'
+ХХХХХХХХ-ХХХХ-ХХХХ-ХХХХ-ХХХХХХХХХХХ
+Function performs format checking then converts each block between '-' to numbers
