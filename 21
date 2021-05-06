@@ -1,0 +1,29 @@
+f1:
+        push    r12
+        push    rbp
+        mov     rbp, rdi
+        push    rbx
+        mov     rbx, rsi
+        call    strlen
+        mov     rdi, rbx
+        mov     r12, rax
+        call    strlen
+        sub     r12, rax
+        mov     rsi, rbx
+        lea     rdi, [rbp+0+r12]
+        call    strcmp
+        pop     rbx
+        test    eax, eax
+        pop     rbp
+        sete    al
+        pop     r12
+        ret
+	
+Let rdi be the first string, rsi - second. Second string must be shorter than first.
+Function returns 1 if second string is at the end of the first.
+
+v1 = "aaaabcd";
+v2 = "bcd";
+v3 = "aaa";
+f(v1,v2); // 1
+f(v1,v3); // 0
