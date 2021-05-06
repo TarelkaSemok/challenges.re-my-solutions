@@ -1,0 +1,15 @@
+f4:
+.LFB40:
+        sub     rsp, 8
+        call    rand
+        cvtsi2ss        xmm0, eax
+        mulss   xmm0, DWORD PTR .LC0[rip]
+        add     rsp, 8
+        ret
+.LC0:
+        .long   805306368
+		
+Constant 0x3000_0000 in float representation is 4,65661287308e-10.
+Which is close to 1.0/(2**31-1). So this function returns
+i2f(rand())/INT_MAX
+INT_MAX = 2147483647
