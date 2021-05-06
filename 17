@@ -1,0 +1,23 @@
+f:
+        sub     edx, edi
+        mov     r8d, ecx
+        mov     ecx, 63			
+        mov     eax, edx    ; eax = edx0-edi0
+        sub     r8d, esi    ; r8d = ecx0-esi0
+        sar     eax, cl     ; !! sar uses only 5 bits to shift
+                            ; eax = -1 if (edx0-edi0)<0
+                            ; eax = 0  if (edx0-edi0)>0
+        and     eax, edx		; eax stores negative edx or 0 if edx>0
+        mov     edx, r8d
+        sar     edx, cl
+        add     edi, eax    ; edi stores edx0 if edx0<edi0
+        and     edx, r8d
+        add     esi, edx
+        sub     esi, edi
+        mov     eax, esi
+        sar     eax, cl
+        and     eax, esi
+        add     eax, edi
+        ret
+		
+Function returns min(a1,a2,a3,a4)
