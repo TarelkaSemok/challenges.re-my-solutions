@@ -1,0 +1,31 @@
+.method public hidebysig static bool  f(char a) cil managed
+  {
+    // Code size       26 (0x1a)
+    .maxstack  8
+    IL_0000:  ldarg.0
+    IL_0001:  ldc.i4.s   97         // 'a'
+    IL_0003:  blt.s      IL_000c
+
+    IL_0005:  ldarg.0
+    IL_0006:  ldc.i4.s   122        // 'z'
+    IL_0008:  bgt.s      IL_000c
+
+    IL_000a:  ldc.i4.1              // ret 1
+    IL_000b:  ret
+
+    IL_000c:  ldarg.0
+    IL_000d:  ldc.i4.s   65         // 'A'
+    IL_000f:  blt.s      IL_0018
+
+    IL_0011:  ldarg.0
+    IL_0012:  ldc.i4.s   90         // 'Z'
+    IL_0014:  bgt.s      IL_0018
+
+    IL_0016:  ldc.i4.1              // ret 1
+    IL_0017:  ret
+
+    IL_0018:  ldc.i4.0              // ret 0
+    IL_0019:  ret
+  } // end of method some_class::f
+
+Function returns 1 if input char is in [a-z],[A-Z] else return 0.
