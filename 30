@@ -1,0 +1,4 @@
+Password is 'metallica'
+Minimal pathced password length would be 1 because scanf cn't accept empty string as input,
+so password check would always fail.
+Input buffer is 128 byte long, so an attempt to crash a program would be to send 129 chars.
