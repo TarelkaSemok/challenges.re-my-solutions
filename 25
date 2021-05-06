@@ -1,0 +1,12 @@
+Input number radix is: 2 (0bNNNN), 10(NNNN), 16 (0xNNNN).
+
+Operations:
+'-' '~' - negation
+'(' ')'
+'|' '|'
+'%'
+'*'
+'/'
+'+'
+'-'
+'^'
