@@ -1,0 +1,72 @@
+f:
+	cmp	rcx, rsi
+	ja	.L10
+	sub	rsi, rcx
+	add	rsi, 1
+	mov	r11, rsi
+	je	.L10
+	test	rcx, rcx
+	jne	.L16
+	mov	rax, rdi        ; if rcx = 0
+	ret
+.L10:                 ; if rcx >= rsi
+	xor	eax, eax
+	ret
+.L16:
+	push	rbx
+	xor	r10d, r10d
+	mov	r9d, 1
+.L4:
+	lea	rax, [rdi+r10]
+	xor	esi, esi
+	xor	r8d, r8d
+.L8:
+	movzx	ebx, BYTE PTR [rdx+rsi]
+	cmp	BYTE PTR [rax+rsi], bl
+	cmovne	r8d, r9d
+	add	rsi, 1
+	cmp	rsi, rcx
+	jne	.L8
+	test	r8d, r8d
+	je	.L12
+	add	r10, 1
+	cmp	r10, r11
+	jne	.L4
+	xor	eax, eax
+.L12:
+	pop	rbx
+	ret
+	
+Decompilation:
+// linux call convention: rdi, rsi, rdx, rcx, r8, r9
+
+// rdi - s1, rsi - n1, rdx - s2, rcx - n2
+f(char* s1, int n1, char* s2,int n2){
+	if(n2 >= n1) {
+		return 0;
+	}
+	else {
+		last_pos = n1 - n2 + 1;
+		if(n2 == 0) {
+			return s1;
+		}
+		else {
+			for(j=0;j<last_pos;j++) {
+				res = s1 + j;
+				flag = 0;
+				for (i=0;i<n2;i++){
+					if( res[i] != s2[i] {
+						flag = 1;
+					}
+				}
+				if (flag == 0) {
+					return res;
+				}
+			}
+			return 0;
+		}
+	}
+}
+
+Function looks for a pointer to a substring s2 in a string s1.
+Returns 0 if s2 can't be found in s1.
