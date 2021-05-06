@@ -1,6 +1,6 @@
 <f>:
    0:          mov    eax,DWORD PTR [esp+0x4]			
-   4:          bswap  eax								; swap bytes
+   4:          bswap  eax                       ; swap bytes
    6:          mov    edx,eax							
    8:          and    eax,0xf0f0f0f             ; swap groups of 4 bits
    d:          and    edx,0xf0f0f0f0
