@@ -1,0 +1,45 @@
+<f>:
+   0:       push   r12
+   2:       test   rsi,rsi
+   5:       mov    r12,rdi
+   8:       push   rbp
+   9:       mov    rbp,rdx            ; rdx does not change. so r12 is always the same address
+   c:       push   rbx
+   d:       mov    rbx,rsi            ; current element address
+  10:       je     32 
+  12:       nop    WORD PTR [rax+rax*1+0x0]
+  18:       mov    rsi,QWORD PTR [rbx]
+  1b:       mov    rdi,rbp
+  1e:       call   r12                ; recursively call itself until we meet a zero element
+  21:       test   eax,eax
+  23:       je     56 
+  25:       js     40 
+  27:       mov    rbx,QWORD PTR [rbx+0x18]
+  2b:       test   rbx,rbx
+  2e:       xchg   ax,ax
+  30:       jne    18 
+  32:       pop    rbx
+  33:       pop    rbp
+  34:       xor    eax,eax
+  36:       pop    r12
+  38:       ret
+  39:       nop    DWORD PTR [rax+0x0]
+  40:       mov    rbx,QWORD PTR [rbx+0x10]
+  44:       test   rbx,rbx
+  47:       je     32 
+  49:       mov    rsi,QWORD PTR [rbx]
+  4c:       mov    rdi,rbp
+  4f:       call   r12
+  52:       test   eax,eax
+  54:       jne    25 
+  56:       mov    rax,rbx
+  59:       pop    rbx
+  5a:       pop    rbp
+  5b:       pop    r12
+  5d:       ret
+  
+Looks like DFS algorithm. 
+Похоже на обход какой-то структуры рекурсивный. Типа DFS алгоритма.
+Лезем вглубь по первой ветке, пока не наткнемся на элемент с пустым указателем "дальше".
+Возвращаемся на уровень вверх и пробуем другой указатель в этом же элементе, но выбор зависит от адреса (строки 23, 25)
+И так далее.
