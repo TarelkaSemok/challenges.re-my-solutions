@@ -1,0 +1,87 @@
+f:
+        mov     rdx, QWORD PTR [rdi]
+        test    dl, dl
+        je      .L18
+        test    dh, 255
+        je      .L19
+        test    edx, 16711680
+        je      .L20
+        test    edx, 4278190080
+        je      .L21
+        movabs  r8, 1095216660480
+        test    rdx, r8
+        je      .L22
+        movabs  r9, 280375465082880
+        test    rdx, r9
+        je      .L26
+        xor     eax, eax
+        movabs  rcx, 71776119061217280
+        movabs  rsi, -72057594037927936
+        jmp     .L14
+.L15:
+        test    rdx, rsi
+        je      .L27
+        add     rax, 8
+        mov     rdx, QWORD PTR [rdi+rax]
+        test    dl, dl
+        je      .L28
+        test    dh, 255
+        je      .L29
+        test    edx, 16711680
+        je      .L30
+        test    edx, 4278190080
+        je      .L31
+        test    rdx, r8
+        je      .L32
+        test    rdx, r9
+        je      .L33
+.L14:
+        test    rdx, rcx
+        jne     .L15
+        add     rax, 6
+        ret
+.L27:
+        add     rax, 7
+        ret
+.L28:
+        rep ret
+.L29:
+        add     rax, 1
+        ret
+.L30:
+        add     rax, 2
+        ret
+.L31:
+        add     rax, 3
+        ret
+.L32:
+        add     rax, 4
+        ret
+.L33:
+        add     rax, 5
+        ret
+.L18:
+        xor     eax, eax
+        ret
+.L20:
+        mov     eax, 2
+        ret
+.L19:
+        mov     eax, 1
+        ret
+.L21:
+        mov     eax, 3
+        ret
+.L26:
+        mov     eax, 5
+        ret
+.L22:
+        mov     eax, 4
+        ret
+		
+Looks like this function is supposed to retrieve and return the size of some variable in bytes.
+But the very first operation is flawed because it checks and makes a decision based on only one single byte.
+Counterexapmle var=0xAA00AA would return its size as 1 and it could lead to errors in operation.
+
+Вся функция в целом так написана, что она скорее возвращает порядковый номер
+первого встреченного байта, заполненного нулями.
