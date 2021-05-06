@@ -1,0 +1,18 @@
+<f>:				; rdi - src, rsi - dest, rdx - divisor, ecx - cnt
+   0:                   mov    r8,rdi
+   3:                   push   rbx
+   4:                   mov    rdi,rsi			; param1 <-> param2
+   7:                   mov    rbx,rdx
+   a:                   mov    rsi,r8
+   d:                   xor    rdx,rdx			; rdx = 0
+
+begin:
+  10:                   lods   rax,QWORD PTR ds:[rsi]
+  12:                   div    rbx							; edx:eax / rbx
+  15:                   stos   QWORD PTR es:[rdi],rax
+  17:                   loop   begin
+  19:                   pop    rbx
+  1a:                   mov    rax,rdx
+  1d:                   ret
+  
+Function divides DWORDs from src array by divisor and stores it in dest array.
