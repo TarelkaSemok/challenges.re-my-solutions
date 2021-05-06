@@ -1,0 +1,13 @@
+f:
+	xor	rax, rax
+.L4:
+	movdqu	xmm0, XMMWORD PTR [rsi+rax]       ; load 128-bit from first array
+	movdqu	xmm1, XMMWORD PTR [rdx+rax]       ; load 128-бит from second array
+	pmaxub	xmm0, xmm1                        ; comparison
+	movdqu	XMMWORD PTR [rdi+rax], xmm0       ; store result in 3rd array
+	add	rax, 16
+	cmp	rax, 1024
+	jne	.L4
+	rep ret
+	
+Function performs 16 max(a,b) operations at a time on unsigned bytes from 1st and 2nd arrays, then stores result in 3rd.
