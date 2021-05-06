@@ -1,0 +1,52 @@
+.LC0:
+        .string "Usage: "
+.LC1:
+        .string "error #1!"
+.LC2:
+        .string "error #2!"
+main:
+        push    rbx
+        mov     rbx, rsi
+        sub     rsp, 160
+        cmp     edi, 2
+        je      .L2
+        mov     edi, OFFSET FLAT:.LC0
+        call    puts
+.L2:
+        mov     rsi, QWORD PTR [rbx+8]
+        lea     rdx, [rsp+16]
+        mov     edi, 1
+        call    __xstat
+        test    eax, eax
+        js      .L10
+        mov     rax, QWORD PTR [rsp+88]
+        xor     edi, edi
+        mov     QWORD PTR [rsp], rax
+        call    time
+        mov     rdi, QWORD PTR [rbx+8]
+        mov     rsi, rsp
+        mov     QWORD PTR [rsp+8], rax
+        call    utime
+        test    eax, eax
+        js      .L11
+        add     rsp, 160
+        xor     eax, eax
+        pop     rbx
+        ret
+.L10:
+        mov     edi, OFFSET FLAT:.LC1
+        call    puts
+        xor     edi, edi
+        call    exit
+.L11:
+        mov     edi, OFFSET FLAT:.LC2
+        call    puts
+        xor     edi, edi
+        call    exit
+	
+Argument to this program should be 'path_to_some_file'.
+Program then checks if the file is valid by calling stat().
+Then it changes file's 'Last modified' time to current time via  utime() and time() respectively.
+
+Параметром дается путь к какому-то файлу. Проверяется, что он есть через stat(),
+затем меняется время последнего доступа на текущее через time() и utime().
