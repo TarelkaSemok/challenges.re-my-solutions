@@ -1,0 +1,19 @@
+<f>:
+   0:          mov    edx,edi
+   2:          shr    edx,1
+   4:          and    edx,0x55555555
+   a:          sub    edi,edx           ; every pair of bits in edi contains number of ones in the pair before operation
+   c:          mov    eax,edi
+   e:          shr    edi,0x2
+  11:          and    eax,0x33333333
+  16:          and    edi,0x33333333
+  1c:          add    edi,eax           ; count number of ones in group of 4 bits
+  1e:          mov    eax,edi
+  20:          shr    eax,0x4
+  23:          add    eax,edi
+  25:          and    eax,0xf0f0f0f
+  2a:          imul   eax,eax,0x1010101
+  30:          shr    eax,0x18
+  33:          ret
+
+Function counts number of ones in 32-bit DWORD
