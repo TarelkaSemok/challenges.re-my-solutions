@@ -1,0 +1,17 @@
+f:
+	uxth	w1, w0
+	lsr	w2, w1, 3
+	lsr	w0, w1, 1
+	eor	w2, w2, w1, lsr 2
+	eor	w2, w1, w2
+	eor	w1, w2, w1, lsr 5
+	and	w1, w1, 1
+	orr	w0, w0, w1, lsl 15
+	ret
+	
+Dunno name of algo. Function is 
+f(short a){
+	sign = (a ^ (a >> 2) ^ (a >> 3) ^ (a >> 5)) & 1;
+	a = (a >> 1) | (sign << 15);
+	return a;
+}
